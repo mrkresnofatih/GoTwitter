@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mrkresnofatih/gotwitter/endpoints/follow"
+	"github.com/mrkresnofatih/gotwitter/models"
 	"github.com/mrkresnofatih/gotwitter/services"
 )
 
@@ -31,6 +32,17 @@ func (f *FollowController) Register(echo *echo.Echo) {
 		Endpoint: unfollowEndpoint,
 	}
 	controllerRouter.AddEndpoint(unfollowEdWithAuth)
+
+	getFollowersEndpoint := &follow.GetFollowersEndpoint{
+		FollowService: f.FollowService,
+	}
+	getFollowersWithValidation := &RequireValidationDecorator[models.FollowGetFollowersRequestModel]{
+		Endpoint: getFollowersEndpoint,
+	}
+	getFollowersWithAuth := &RequireAuthorizationDecorator{
+		Endpoint: getFollowersWithValidation,
+	}
+	controllerRouter.AddEndpoint(getFollowersWithAuth)
 
 	controllerRouter.Build()
 }

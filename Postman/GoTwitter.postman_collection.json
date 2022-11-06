@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1324/api/v2/auth/login?grantid=c9569602-0f41-4f17-a886-34478255ed18",
+							"raw": "http://localhost:1324/api/v2/auth/login?grantid=5928faf8-60b6-441f-8d89-593a3c50c0f9",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -30,8 +30,120 @@
 							"query": [
 								{
 									"key": "grantid",
-									"value": "c9569602-0f41-4f17-a886-34478255ed18"
+									"value": "5928faf8-60b6-441f-8d89-593a3c50c0f9"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Follow",
+			"item": [
+				{
+					"name": "Follow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDIyLTEyLTA4VDA1OjQ2OjU0KzA3OjAwIiwidXNlcm5hbWUiOiJsZWdpb24wMDA0In0.ouE94GfdGjDsLwLq2EH1y6E5GpWcx4sza7LHYe52TQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1324/api/v2/follow/follow/legion0001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1324",
+							"path": [
+								"api",
+								"v2",
+								"follow",
+								"follow",
+								"legion0001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnFollow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDIyLTEyLTA4VDA1OjM4OjEyKzA3OjAwIiwidXNlcm5hbWUiOiJsZWdpb24wMDAzIn0.oz6169mSVlAHoB9O6NlTmZD2ozIaa-AVnAkWysRgP80",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1324/api/v2/follow/unfollow/legion0002",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1324",
+							"path": [
+								"api",
+								"v2",
+								"follow",
+								"unfollow",
+								"legion0002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetFollowers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOiIyMDIyLTEyLTA4VDA1OjM4OjEyKzA3OjAwIiwidXNlcm5hbWUiOiJsZWdpb24wMDAzIn0.oz6169mSVlAHoB9O6NlTmZD2ozIaa-AVnAkWysRgP80",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"legion0001\",\r\n    \"page\": 1,\r\n    \"pageSize\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1324/api/v2/follow/followers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1324",
+							"path": [
+								"api",
+								"v2",
+								"follow",
+								"followers"
 							]
 						}
 					},

@@ -70,19 +70,24 @@ func (f *FollowService) GetFollowers(ctx context.Context, getFollowersReq models
 		{"foreignField", "username"},
 		{"as", "profile"},
 	}}}
+	unwindStage := bson.D{{"$unwind", "$profile"}}
 
 	cursor, err := f.MongoDb.Collection(FollowCollectionName).
-		Aggregate(ctx, mongo.Pipeline{matchStage, skipStage, limitStage, lookupStage})
+		Aggregate(ctx, mongo.Pipeline{matchStage, skipStage, limitStage, lookupStage, unwindStage})
 	if err != nil {
+		log.Error(err)
 		log.Error("failed to aggregate follow docs with player docs")
 		return *new(models.FollowGetFollowersResponseModel), errors.New("failed to aggregate follow docs with player docs")
 	}
 
 	var followerGetProfiles []models.FollowGetFollowerResponseModel
 	if err = cursor.All(ctx, &followerGetProfiles); err != nil {
+		log.Error(err)
 		log.Error("failed to parse cursor docs with follower-get-profiles")
 		return *new(models.FollowGetFollowersResponseModel), errors.New("failed to parse cursor docs with follower-get-profiles")
 	}
+
+	log.Info(followerGetProfiles)
 
 	log.Info("finished GetFollowers")
 	return models.FollowGetFollowersResponseModel{
