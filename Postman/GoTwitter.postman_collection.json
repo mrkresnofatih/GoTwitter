@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "f4f514dd-db92-4ba3-9772-9010c20dc6de",
+		"name": "GoTwitter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13142924"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1324/api/v2/auth/login?grantid=c9569602-0f41-4f17-a886-34478255ed18",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1324",
+							"path": [
+								"api",
+								"v2",
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "grantid",
+									"value": "c9569602-0f41-4f17-a886-34478255ed18"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
