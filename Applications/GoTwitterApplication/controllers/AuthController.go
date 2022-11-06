@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/mrkresnofatih/gotwitter/endpoints"
+	"github.com/mrkresnofatih/gotwitter/endpoints/auth"
 	"github.com/mrkresnofatih/gotwitter/services"
 )
 
@@ -16,7 +16,7 @@ func (a AuthController) Register(echo *echo.Echo) {
 		PathPrefix: "/api/v2/auth",
 	}
 
-	authLoginEndpoint := &endpoints.AuthLoginEndpoint{
+	authLoginEndpoint := &auth.AuthLoginEndpoint{
 		AuthService: a.AuthService,
 	}
 	controllerRouter.AddEndpoint(authLoginEndpoint)

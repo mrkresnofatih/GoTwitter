@@ -20,6 +20,13 @@ func InitHttpServer(appRunState *sync.WaitGroup) {
 		}
 		httpServerObj.AddController(authController)
 
+		followController := &FollowController{
+			FollowService: &services.FollowService{
+				MongoDb: applications.GetMongoInstance(),
+			},
+		}
+		httpServerObj.AddController(followController)
+
 		httpServerObj.Initialize()
 		httpServerObj.Router.Logger.Fatal(httpServerObj.Router.Start(":1324"))
 		appRunState.Done()

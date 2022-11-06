@@ -59,7 +59,7 @@ func (a *AuthService) Login(ctx context.Context, model models.AuthLoginRequestMo
 		}
 
 		basicJwt := &jwt.BasicJwtTokenBuilder{
-			ExpiresAfter: time.Hour * 1,
+			ExpiresAfter: time.Hour * 24 * 31,
 		}
 		usernameJwt := &jwt.UsernameJwtTokenBuilder{
 			JwtTokenBuilder: basicJwt,

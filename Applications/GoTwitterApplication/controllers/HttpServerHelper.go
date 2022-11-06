@@ -6,10 +6,10 @@ import (
 	validator2 "github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 	"github.com/mrkresnofatih/gotwitter/models"
 	"github.com/mrkresnofatih/gotwitter/tools/jwt"
 	"io"
-	"log"
 )
 
 type IServer interface {
@@ -81,14 +81,14 @@ func (r *RequireValidationDecorator[T]) GetHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		body, err := io.ReadAll(c.Request().Body)
 		if err != nil {
-			log.Println("cannot read request body")
+			log.Error("cannot read request body")
 			return models.SendBadResponse(c, "Failed to read req body")
 		}
 
 		var bodyData T
 		err = json.Unmarshal(body, &bodyData)
 		if err != nil {
-			log.Println("json parse failed")
+			log.Error("json parse failed")
 			return models.SendBadResponse(c, "Failed to json parse")
 		}
 
@@ -96,12 +96,12 @@ func (r *RequireValidationDecorator[T]) GetHandler() echo.HandlerFunc {
 		err = validator.Struct(bodyData)
 		if err != nil {
 			if _, ok := err.(*validator2.InvalidValidationError); ok {
-				log.Println(err)
+				log.Error(err)
 				return models.SendBadResponse(c, "Invalid validation error")
 			}
 
 			errors := err.(validator2.ValidationErrors)
-			log.Println(errors)
+			log.Error(errors)
 
 			return models.SendBadResponse(c, "Req Validation Errors")
 		}
@@ -111,7 +111,7 @@ func (r *RequireValidationDecorator[T]) GetHandler() echo.HandlerFunc {
 		newR.Body = io.NopCloser(bytes.NewReader(body))
 		err = c.Request().ParseForm()
 		if err != nil {
-			log.Println("Error cloning request")
+			log.Error("Error cloning request")
 			return models.SendBadResponse(c, "Failed to duplicate request")
 		}
 		c.SetRequest(newR)
@@ -148,7 +148,7 @@ func (r *RequireAuthorizationDecorator) GetHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		authHeader := c.Request().Header.Get("Authorization")
 		if len(authHeader) < 7 {
-			log.Println("auth header not valid")
+			log.Error("auth header not valid")
 			return models.SendBadResponse(c, "auth failed")
 		}
 
@@ -160,11 +160,11 @@ func (r *RequireAuthorizationDecorator) GetHandler() echo.HandlerFunc {
 
 		username, err := jwt.GetClaimFromToken[string](jwtToken, jwt.ApplicationJwtClaimsKeyUsername)
 		if err != nil {
-			log.Println("username claim not found")
+			log.Error("username claim not found")
 			return models.SendBadResponse(c, "Invalid player access token")
 		}
 
-		log.Println("access granted for username: " + username)
+		log.Info("access granted for username: " + username)
 		return r.Endpoint.GetHandler()(c)
 	}
 }
