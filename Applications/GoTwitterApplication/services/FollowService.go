@@ -87,8 +87,6 @@ func (f *FollowService) GetFollowers(ctx context.Context, getFollowersReq models
 		return *new(models.FollowGetFollowersResponseModel), errors.New("failed to parse cursor docs with follower-get-profiles")
 	}
 
-	log.Info(followerGetProfiles)
-
 	log.Info("finished GetFollowers")
 	return models.FollowGetFollowersResponseModel{
 		Username:  getFollowersReq.Username,
@@ -97,8 +95,38 @@ func (f *FollowService) GetFollowers(ctx context.Context, getFollowersReq models
 }
 
 func (f *FollowService) GetFollowings(ctx context.Context, getFollowingsReq models.FollowGetFollowingsRequestModel) (models.FollowGetFollowingsResponseModel, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("Start GetFollowings")
+	matchStage := bson.D{{"$match", bson.D{{"follower", getFollowingsReq.Follower}}}}
+	skipStage := bson.D{{"$skip", int64(getFollowingsReq.PageSize * (getFollowingsReq.Page - 1))}}
+	limitStage := bson.D{{"$limit", int64(getFollowingsReq.PageSize)}}
+	lookupStage := bson.D{{"$lookup", bson.D{
+		{"from", PlayerCollectionName},
+		{"localField", "username"},
+		{"foreignField", "username"},
+		{"as", "profile"},
+	}}}
+	unwindStage := bson.D{{"$unwind", "$profile"}}
+
+	cursor, err := f.MongoDb.Collection(FollowCollectionName).
+		Aggregate(ctx, mongo.Pipeline{matchStage, skipStage, limitStage, lookupStage, unwindStage})
+	if err != nil {
+		log.Error(err)
+		log.Error("failed to aggregate follow docs with player docs")
+		return *new(models.FollowGetFollowingsResponseModel), errors.New("failed to aggregate follow docs with player docs")
+	}
+
+	var followingGetProfiles []models.FollowGetFollowingResponseModel
+	if err = cursor.All(ctx, &followingGetProfiles); err != nil {
+		log.Error(err)
+		log.Error("failed to parse cursor docs with following-get-profiles")
+		return *new(models.FollowGetFollowingsResponseModel), errors.New("failed to parse cursor docs")
+	}
+
+	log.Info("finished GetFollowings")
+	return models.FollowGetFollowingsResponseModel{
+		Username:   getFollowingsReq.Follower,
+		Followings: followingGetProfiles,
+	}, nil
 }
 
 const (

@@ -44,5 +44,16 @@ func (f *FollowController) Register(echo *echo.Echo) {
 	}
 	controllerRouter.AddEndpoint(getFollowersWithAuth)
 
+	getFollowingsEndpoint := &follow.GetFollowingsEndpoint{
+		FollowService: f.FollowService,
+	}
+	getFollowingsWithValidation := &RequireValidationDecorator[models.FollowGetFollowingsRequestModel]{
+		Endpoint: getFollowingsEndpoint,
+	}
+	getFollowingsWithAuth := &RequireAuthorizationDecorator{
+		Endpoint: getFollowingsWithValidation,
+	}
+	controllerRouter.AddEndpoint(getFollowingsWithAuth)
+
 	controllerRouter.Build()
 }
